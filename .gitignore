@@ -6,6 +6,11 @@
 # DS_Store
 **/.DS_Store
 
+# SQLite database and runtime files for Hotel.Api
+Hotel.Api/hotel.db
+Hotel.Api/hotel.db-shm
+Hotel.Api/hotel.db-wal
+
 # User-specific files
 *.rsuser
 *.suo
