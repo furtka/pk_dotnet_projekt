@@ -1,40 +1,99 @@
 using Hotel.Api.Rooms.Dtos;
+using Hotel.Application.Domain.Models;
+using Hotel.Application.UseCases.Rooms;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Hotel.Api.Rooms;
 
 [ApiController]
 [Route("api/rooms")]
-public class RoomsController : ControllerBase
+public class RoomsController(
+    GetRoomsUseCase getRoomsUseCase,
+    GetRoomByIdUseCase getRoomByIdUseCase,
+    CreateRoomUseCase createRoomUseCase,
+    UpdateRoomUseCase updateRoomUseCase,
+    DeleteRoomUseCase deleteRoomUseCase) : ControllerBase
 {
+    [HttpGet]
     public async Task<ActionResult<List<GetRoomsResponseItem>>> GetRooms(
         [FromQuery] GetRoomsRequest request,
         CancellationToken ct)
     {
-        throw new NotImplementedException();
+        var rooms = await getRoomsUseCase.ExecuteAsync(
+            request.MinCapacity,
+            request.OnlyActive,
+            ct);
+
+        return rooms.Select(r => new GetRoomsResponseItem
+        {
+            Id = r.Id,
+            Number = r.Number,
+            Capacity = r.Capacity,
+            IsActive = r.IsActive
+        }).ToList();
     }
 
     [HttpGet("{id}")]
-    public async Task<ActionResult<GetRoomResponse>> GetRoom(int id, CancellationToken ct)
+    public async Task<ActionResult<GetRoomResponse>> GetRoom(
+        int id,
+        CancellationToken ct)
     {
-        throw new NotImplementedException();
+        var room = await getRoomByIdUseCase.ExecuteAsync(id, ct);
+
+        if (room is null)
+        {
+            return NotFound();
+        }
+
+        return new GetRoomResponse
+        {
+            Id = room.Id,
+            Number = room.Number,
+            Capacity = room.Capacity,
+            IsActive = room.IsActive
+        };
     }
 
     [HttpPost]
-    public async Task<ActionResult<CreateRoomResponse>> CreateRoom(CreateRoomRequest request, CancellationToken ct)
+    public async Task<ActionResult<CreateRoomResponse>> CreateRoom(
+        CreateRoomRequest request,
+        CancellationToken ct)
     {
-        throw new NotImplementedException();
+        var room = new Room
+        {
+            Number = request.Number,
+            Capacity = request.Capacity,
+            IsActive = request.IsActive
+        };
+
+        var id = await createRoomUseCase.ExecuteAsync(room, ct);
+
+        return new CreateRoomResponse { Id = id };
     }
 
     [HttpPut("{id}")]
-    public async Task<ActionResult> UpdateRoom(int id, UpdateRoomRequest request, CancellationToken ct)
+    public async Task<ActionResult> UpdateRoom(
+        int id,
+        UpdateRoomRequest request,
+        CancellationToken ct)
     {
-        throw new NotImplementedException();
+        var room = new Room
+        {
+            Id = id,
+            Number = request.Number,
+            Capacity = request.Capacity,
+            IsActive = request.IsActive
+        };
+
+        await updateRoomUseCase.ExecuteAsync(room, ct);
+
+        return NoContent();
     }
 
     [HttpDelete("{id}")]
     public async Task<ActionResult> DeleteRoom(int id, CancellationToken ct)
     {
-        throw new NotImplementedException();
+        await deleteRoomUseCase.ExecuteAsync(id, ct);
+        return NoContent();
     }
 }
