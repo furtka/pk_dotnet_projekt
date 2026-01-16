@@ -1,0 +1,8 @@
+namespace Hotel.Api.Rooms.Dtos;
+
+public sealed class CreateRoomRequest
+{
+    public string Number { get; set; } = default!;
+    public int Capacity { get; set; }
+    public bool IsActive { get; set; } = true;
+}
