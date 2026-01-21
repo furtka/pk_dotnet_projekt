@@ -1,5 +1,8 @@
 using Hotel.Infrastructure;
 using Microsoft.EntityFrameworkCore;
+using Hotel.Application.Domain.Repositories;
+using Hotel.Infrastructure.Repositories;
+using Hotel.Application.UseCases.Rooms;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,6 +14,13 @@ builder.Services.AddDbContext<HotelDbContext>(opt =>
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddControllers();
+
+builder.Services.AddScoped<IRoomRepository, RoomRepository>();
+builder.Services.AddScoped<GetRoomsUseCase>();
+builder.Services.AddScoped<GetRoomByIdUseCase>();
+builder.Services.AddScoped<CreateRoomUseCase>();
+builder.Services.AddScoped<UpdateRoomUseCase>();
+builder.Services.AddScoped<DeleteRoomUseCase>();
 
 var app = builder.Build();
 
