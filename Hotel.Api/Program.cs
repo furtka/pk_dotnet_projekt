@@ -25,7 +25,9 @@ builder.Services.AddScoped<DeleteRoomUseCase>();
 
 builder.Services.AddScoped<IGuestRepository, GuestRepository>();
 builder.Services.AddScoped<GetGuestsUseCase>();
-
+builder.Services.AddScoped<CreateGuestUseCase>();
+builder.Services.AddScoped<GetGuestByIdUseCase>();
+builder.Services.AddScoped<UpdateGuestUseCase>();
 
 var app = builder.Build();
 

@@ -1,39 +1,66 @@
 ﻿using Hotel.Application.Domain.Models;
 using Hotel.Application.Domain.Repositories;
+using Hotel.Infrastructure.Entities;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 using System.Reflection.Metadata.Ecma335;
 using System.Text;
 using System.Threading.Tasks;
 
 using EntityGuest = Hotel.Infrastructure.Entities.Guest;
+using Guest = Hotel.Application.Domain.Models.Guest;
 
 namespace Hotel.Infrastructure.Repositories
 {
     public class GuestRepository(HotelDbContext dbContext) : IGuestRepository
     {
-        public Task<int> AddAsync(Guest guest, CancellationToken ct)
+        public async Task<int> AddAsync(Guest guest, CancellationToken ct)
         {
-            throw new NotImplementedException();
+
+            var entity = new EntityGuest
+            {
+                FirstName = guest.FirstName,
+                LastName  = guest.LastName,
+                Email = guest.Email,
+                Phone = guest.Phone,
+            };
+
+            dbContext.Guests.Add(entity);
+            await dbContext.SaveChangesAsync(ct);
+
+            guest.Id = entity.Id;
+            return entity.Id;
         }
 
         public async Task<List<Guest>> GetAllAsync(CancellationToken ct)
         {
             return dbContext.Guests.Select(MapToDomain).ToList();
 
-           // return entities.Select(MapToDomain).ToList();
+           
         }
 
-        public Task<Guest?> GetByIdAsync(int id, CancellationToken ct)
+        public async Task<Guest?> GetByIdAsync(int id, CancellationToken ct)
         {
-            throw new NotImplementedException();
+            var entity = await dbContext.Guests.FindAsync([id], ct);
+            if (entity is null) return null;
+
+            return MapToDomain(entity);
         }
 
-        public Task UpdateAsync(Guest guest, CancellationToken ct)
+        public async Task UpdateAsync(Guest guest, CancellationToken ct)
         {
-            throw new NotImplementedException();
+            var entity = await dbContext.Guests.FindAsync([guest.Id], ct);
+            if (entity is null) return;
+
+            entity.FirstName = guest.FirstName;
+            entity.LastName = guest.LastName;
+            entity.Email = guest.Email;
+            entity.Phone = guest.Phone;
+
+            await dbContext.SaveChangesAsync(ct);
         }
 
 
