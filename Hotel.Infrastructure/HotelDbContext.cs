@@ -13,6 +13,6 @@ public class HotelDbContext(DbContextOptions<HotelDbContext> options) : DbContex
     protected override void OnModelCreating(ModelBuilder b)
     {
         b.Entity<Room>().HasIndex(r => r.Number).IsUnique();
-        b.Entity<Reservation>().Property(x => x.RowVersion).IsRowVersion();
+        //b.Entity<Reservation>().Property(x => x.RowVersion).IsRowVersion();
     }
 }

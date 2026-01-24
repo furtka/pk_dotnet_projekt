@@ -64,11 +64,11 @@ namespace Hotel.Infrastructure.Migrations
                     b.Property<int>("RoomId")
                         .HasColumnType("INTEGER");
 
-                    b.Property<byte[]>("RowVersion")
+                    /*b.Property<byte[]>("RowVersion")
                         .IsConcurrencyToken()
                         .IsRequired()
                         .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("BLOB");
+                        .HasColumnType("BLOB");*/
 
                     b.Property<string>("Status")
                         .IsRequired()

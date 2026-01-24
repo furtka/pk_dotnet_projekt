@@ -57,7 +57,7 @@ namespace Hotel.Infrastructure.Migrations
                     GuestsCount = table.Column<int>(type: "INTEGER", nullable: false),
                     TotalPrice = table.Column<decimal>(type: "TEXT", nullable: false),
                     Status = table.Column<string>(type: "TEXT", nullable: false),
-                    RowVersion = table.Column<byte[]>(type: "BLOB", rowVersion: true, nullable: false)
+                    //RowVersion = table.Column<byte[]>(type: "BLOB", rowVersion: true, nullable: false)
                 },
                 constraints: table =>
                 {
