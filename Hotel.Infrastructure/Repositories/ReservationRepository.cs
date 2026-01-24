@@ -6,8 +6,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
 using System.Reflection.Metadata.Ecma335;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
+using static Hotel.Application.Domain.Repositories.IReservationRepository;
 using EntityGuest = Hotel.Infrastructure.Entities.Guest;
 using EntityReservation = Hotel.Infrastructure.Entities.Reservation;
 using EntityRoom = Hotel.Infrastructure.Entities.Room;
@@ -16,7 +18,7 @@ namespace Hotel.Infrastructure.Repositories
 {
     public class ReservationRepository(HotelDbContext dbContext) : IReservationRepository
     {
-        public async Task<int?> AddAsync(Reservation resv, CancellationToken ct)
+        public async Task<(ReservationResult, int?)> AddAsync(Reservation resv, CancellationToken ct)
         {
             // Check input data validity
             // CheckIn must be before checkout
@@ -25,12 +27,15 @@ namespace Hotel.Infrastructure.Repositories
             // room must have capacity for guests
             var room = await dbContext.Rooms.FindAsync([resv.RoomId], ct);
             var guest = await dbContext.Guests.FindAsync([resv.GuestId], ct);
-            if (resv.CheckIn >= resv.CheckOut ||
-                room == null ||
-                guest == null ||
-                resv.GuestsCount > room.Capacity)
+
+            if (room == null || !room.IsActive || guest == null)
             {
-                return null;
+                return (ReservationResult.InvalidRoomOrGuest, null);
+            }
+
+            if(room.Capacity < resv.GuestsCount)
+            {
+                return (ReservationResult.RoomTooSmall, null);
             }
 
             var hasCollisions = await dbContext.Reservations.AnyAsync(r => // find reservations
@@ -42,7 +47,7 @@ namespace Hotel.Infrastructure.Repositories
 
             if (hasCollisions)
             {
-                return null;
+                return (ReservationResult.Conflict, null);
             }
 
             // Everything seems ok, construct a reservation
@@ -63,7 +68,7 @@ namespace Hotel.Infrastructure.Repositories
             await dbContext.SaveChangesAsync(ct);
 
             resv.Id = reservation.Id;
-            return reservation.Id;
+            return (ReservationResult.Ok, null);
         }
 
         public async Task<Reservation?> GetByIdAsync(int id, CancellationToken ct)

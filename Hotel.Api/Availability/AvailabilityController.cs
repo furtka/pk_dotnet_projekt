@@ -15,6 +15,11 @@ public class AvailabilityController(
         [FromQuery] GetAvailabilityRequest request,
         CancellationToken ct)
     {
+        if (request.CheckIn >= request.CheckOut)
+        {
+            return BadRequest("Invalid dates - CheckOut has to be later than CheckIn");
+        }
+
         var filter = new AvailabilityFilter()
         {
             CheckIn = request.CheckIn,

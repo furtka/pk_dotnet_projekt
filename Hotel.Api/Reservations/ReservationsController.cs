@@ -2,7 +2,9 @@ using Hotel.Api.Guests.Dtos;
 using Hotel.Api.Reservations.Dtos;
 using Hotel.Application.Domain.Models;
 using Hotel.Application.UseCases.Guest;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
+using static Hotel.Application.Domain.Repositories.IReservationRepository;
 
 namespace Hotel.Api.Reservations;
 
@@ -36,6 +38,11 @@ public class ReservationsController(
     [HttpPost]
     public async Task<ActionResult<CreateReservationResponse>> CreateReservation(CreateReservationRequest request, CancellationToken ct)
     {
+        if (request.CheckIn >= request.CheckOut)
+        {
+            return BadRequest("Invalid dates - CheckOut has to be later than CheckIn");
+        }
+
         var reservation = new Reservation()
         {
             RoomId = request.RoomId,
@@ -44,14 +51,30 @@ public class ReservationsController(
             CheckOut = request.CheckOut,
             GuestsCount = request.GuestsCount
         };
-        var resId = await createReservationUseCase.ExecuteAsync(reservation, ct);
+        var (result, id) = await createReservationUseCase.ExecuteAsync(reservation, ct);
 
-        if (resId == null) return BadRequest();
-
-        return new CreateReservationResponse()
+        switch (result)
         {
-            Id = (int) resId
-        };
+            case ReservationResult.Conflict:
+                return Conflict("Reservation would conflict with another");
+
+            case ReservationResult.InvalidRoomOrGuest:
+                return BadRequest("Room or Guest with given Id was not found");
+
+            case ReservationResult.RoomTooSmall:
+                return BadRequest("Room is too small for a given number of guests");
+        }
+
+        // this should never happen
+        if (id == null)
+        {
+            return StatusCode(500, "Reservation creation result Ok, but no id returned");
+        }
+
+        return Ok(new CreateReservationResponse()
+        {
+            Id = (int) id
+        });
     }
 
     [HttpDelete("{id}")]

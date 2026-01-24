@@ -5,21 +5,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static Hotel.Application.Domain.Repositories.IReservationRepository;
 
 namespace Hotel.Application.UseCases.Guest
 {
     public class CreateReservationUseCase(IReservationRepository reservationRepository)
     {
-        public Task<int?> ExecuteAsync(Reservation resv, CancellationToken ct)
+        public Task<(ReservationResult, int?)> ExecuteAsync(Reservation resv, CancellationToken ct)
         {
-            var result = reservationRepository.AddAsync(resv, ct);
-            if(result == null)
-            {
-                return null;
-            }
-
-            return result;
-
+            return reservationRepository.AddAsync(resv, ct);
         }
     }
 }

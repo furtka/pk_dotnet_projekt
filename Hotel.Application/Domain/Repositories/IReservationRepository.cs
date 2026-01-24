@@ -9,8 +9,15 @@ namespace Hotel.Application.Domain.Repositories
 {
     public interface IReservationRepository
     {
+        public enum ReservationResult
+        {
+            Conflict,
+            InvalidRoomOrGuest,
+            RoomTooSmall,
+            Ok
+        };
         Task<Reservation?> GetByIdAsync(int id, CancellationToken ct);
-        Task<int?> AddAsync(Reservation resv, CancellationToken ct);
+        Task<(ReservationResult, int?)> AddAsync(Reservation resv, CancellationToken ct);
 
         Task<bool> DeleteAsync(int id, CancellationToken ct);
     }
