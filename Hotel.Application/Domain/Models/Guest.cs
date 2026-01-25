@@ -6,5 +6,5 @@ public class Guest
     public string FirstName { get; set; } = default!;
     public string LastName { get; set; } = default!;
     public string Email { get; set; } = default!;
-    public string? Phone { get; set; }
+    public string? Phone { get; set; } = default;
 }
