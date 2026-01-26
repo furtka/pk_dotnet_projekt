@@ -8,5 +8,4 @@ public class Room
     public int Capacity { get; set; }
     public decimal PricePerNight { get; set; }
     public bool IsActive { get; set; } = true;
-    public ICollection<Reservation> Reservations { get; set; } = new List<Reservation>();
 }

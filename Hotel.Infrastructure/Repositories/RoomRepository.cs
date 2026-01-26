@@ -15,7 +15,7 @@ public class RoomRepository(HotelDbContext dbContext) : IRoomRepository
         return MapToDomain(entity);
     }
 
-    public async Task<List<Room>> GetAllAsync(int? minCapacity, bool onlyActive, CancellationToken ct)
+    public async Task<RoomPage> GetAllAsync(int pageSize, int? nextId, int? minCapacity, bool onlyActive, CancellationToken ct)
     {
         var query = dbContext.Rooms.AsQueryable();
 
@@ -29,10 +29,25 @@ public class RoomRepository(HotelDbContext dbContext) : IRoomRepository
             query = query.Where(r => r.IsActive);
         }
 
-        var entities = await query
-            .ToListAsync(ct);
+        if (nextId.HasValue)
+        {
+            query = query.Where(r => r.Id >= nextId.Value);
+        }
 
-        return entities.Select(MapToDomain).ToList();
+        var entities = await query
+            .OrderBy(r => r.Id)
+            .Take(pageSize)
+            .ToListAsync(ct);
+        
+        var hasNext = entities.Count == pageSize;
+        int? newNextId = hasNext ? entities.Last().Id + 1 : null;
+
+        return new RoomPage
+        {
+            Rooms = [.. entities.Select(MapToDomain)],
+            HasNext = hasNext,
+            NextId = newNextId
+        };
     }
 
     public async Task<int> AddAsync(Room room, CancellationToken ct)
