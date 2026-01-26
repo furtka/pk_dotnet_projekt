@@ -1,0 +1,29 @@
+@base_url = http://localhost:5069/api
+
+### 1. Create a Guest
+POST {{base_url}}/guests
+Content-Type: application/json
+
+{
+  "firstName": "Bob",
+  "lastName": "Jones",
+  "email": "bob.jones@example.com",
+  "phone": "+48444555666"
+}
+
+### 2. Get Guest Details
+# Replace {id} with the ID returned from step 1
+GET {{base_url}}/guests/1
+Accept: application/json
+
+### 3. Update Guest
+# Replace {id} with the ID returned from step 1
+PUT {{base_url}}/guests/1
+Content-Type: application/json
+
+{
+  "firstName": "Robert",
+  "lastName": "Jones",
+  "email": "robert.jones@example.com",
+  "phone": "+48444555666"
+}

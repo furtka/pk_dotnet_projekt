@@ -12,8 +12,6 @@ public class Reservation
     public int GuestsCount { get; set; }
     public decimal TotalPrice { get; set; }
     public string Status { get; set; } = "Active";
-    public byte[] RowVersion { get; set; } = [];
-
     public Room Room { get; set; } = default!;
     public Guest Guest { get; set; } = default!;
 }

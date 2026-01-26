@@ -1,0 +1,31 @@
+@base_url = http://localhost:5069/api
+
+### 1. Create a Room
+POST {{base_url}}/rooms
+Content-Type: application/json
+
+{
+  "number": "301",
+  "capacity": 4,
+  "isActive": true
+}
+
+### 2. Get Room Details
+# Replace {id} with the ID returned from step 1
+GET {{base_url}}/rooms/1
+Accept: application/json
+
+### 3. Update Room
+# Replace {id} with the ID returned from step 1
+PUT {{base_url}}/rooms/1
+Content-Type: application/json
+
+{
+  "number": "301-Premium",
+  "capacity": 4,
+  "isActive": true
+}
+
+### 4. Delete Room
+# Replace {id} with the ID returned from step 1
+DELETE {{base_url}}/rooms/1
