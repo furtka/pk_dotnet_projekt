@@ -12,7 +12,8 @@ public class GuestsController(
     GetGuestsUseCase getGuestsUseCase,
     CreateGuestUseCase createGuestUseCase,
     GetGuestByIdUseCase getGuestByIdUseCase,
-    UpdateGuestUseCase updateGuestUseCase
+    UpdateGuestUseCase updateGuestUseCase,
+    ILogger<GuestsController> logger
     ) : ControllerBase
 {
     /// <summary>
@@ -26,6 +27,7 @@ public class GuestsController(
         [FromQuery] GetGuestsRequest request,
         CancellationToken ct)
     {
+        logger.LogInformation("Getting guests");
         var guests = await getGuestsUseCase.ExecuteAsync(ct);
 
         return guests.Select(g => new GetGuestsResponseItem()
@@ -47,6 +49,7 @@ public class GuestsController(
     [HttpGet("{id}")]
     public async Task<ActionResult<GetGuestResponse>> GetGuest(int id, CancellationToken ct)
     {
+        logger.LogInformation("Getting guest with id: {Id}", id);
         var guest = await getGuestByIdUseCase.ExecuteAsync(id, ct);
 
         if (guest is null)
@@ -73,6 +76,7 @@ public class GuestsController(
     [HttpPost]
     public async Task<ActionResult<CreateGuestResponse>> CreateGuest(CreateGuestRequest request, CancellationToken ct)
     {
+        logger.LogInformation("Creating guest: {FirstName} {LastName}", request.FirstName, request.LastName);
         var guest = new Guest
         {
             FirstName = request.FirstName,
@@ -97,6 +101,7 @@ public class GuestsController(
     [HttpPut("{id}")]
     public async Task<ActionResult> UpdateGuest(int id, UpdateGuestRequest request, CancellationToken ct)
     {
+        logger.LogInformation("Updating guest with id: {Id}", id);
         var guest = new Guest
         {
             Id = id,

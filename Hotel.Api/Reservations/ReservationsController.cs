@@ -13,7 +13,8 @@ namespace Hotel.Api.Reservations;
 public class ReservationsController(
     GetReservationByIdUseCase getReservationByIdUseCase,
     CreateReservationUseCase createReservationUseCase,
-    RemoveReservationUseCase removeReservationUseCase) : ControllerBase
+    RemoveReservationUseCase removeReservationUseCase,
+    ILogger<ReservationsController> logger) : ControllerBase
 {
     /// <summary>
     /// Retrieves a specific reservation by its unique identifier.
@@ -24,6 +25,7 @@ public class ReservationsController(
     [HttpGet("{id}")]
     public async Task<ActionResult<GetReservationResponse?>> GetReservation(int id, CancellationToken ct)
     {
+        logger.LogInformation("Getting reservation with Id: {ReservationId}", id);
         var reservation = await getReservationByIdUseCase.ExecuteAsync(id, ct);
 
         if (reservation == null) return NotFound();

@@ -12,7 +12,8 @@ public class RoomsController(
     GetRoomByIdUseCase getRoomByIdUseCase,
     CreateRoomUseCase createRoomUseCase,
     UpdateRoomUseCase updateRoomUseCase,
-    DeleteRoomUseCase deleteRoomUseCase) : ControllerBase
+    DeleteRoomUseCase deleteRoomUseCase,
+    ILogger<RoomsController> logger) : ControllerBase
 {
     /// <summary>
     /// Retrieves a list of rooms based on filtering criteria.
@@ -25,6 +26,7 @@ public class RoomsController(
         [FromQuery] GetRoomsRequest request,
         CancellationToken ct)
     {
+        logger.LogInformation("Getting rooms with min capacity: {MinCapacity}, only active: {OnlyActive}", request.MinCapacity, request.OnlyActive);
         var rooms = await getRoomsUseCase.ExecuteAsync(
             request.MinCapacity,
             request.OnlyActive,
@@ -52,6 +54,7 @@ public class RoomsController(
         int id,
         CancellationToken ct)
     {
+        logger.LogInformation("Getting room with id: {Id}", id);
         var room = await getRoomByIdUseCase.ExecuteAsync(id, ct);
 
         if (room is null)
@@ -81,6 +84,7 @@ public class RoomsController(
         CreateRoomRequest request,
         CancellationToken ct)
     {
+        logger.LogInformation("Creating room with number: {Number}", request.Number);
         var room = new Room
         {
             Number = request.Number,
@@ -108,6 +112,7 @@ public class RoomsController(
         UpdateRoomRequest request,
         CancellationToken ct)
     {
+        logger.LogInformation("Updating room with id: {Id}", id);
         var room = new Room
         {
             Id = id,
@@ -132,6 +137,7 @@ public class RoomsController(
     [HttpDelete("{id}")]
     public async Task<ActionResult> DeleteRoom(int id, CancellationToken ct)
     {
+        logger.LogInformation("Deleting room with id: {Id}", id);
         await deleteRoomUseCase.ExecuteAsync(id, ct);
         return NoContent();
     }
