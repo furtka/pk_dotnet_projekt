@@ -40,8 +40,8 @@ namespace Hotel.Infrastructure.Repositories
 
             var hasCollisions = await dbContext.Reservations.AnyAsync(r => // find reservations
                 r.RoomId == resv.RoomId && // for the same room
-                r.Status == "Active" && // which are active
-                resv.CheckOut >= r.CheckIn && r.CheckOut <= resv.CheckIn // which overlap in dates
+                r.Status == "Active" && // which are activ
+                resv.CheckIn < r.CheckOut && r.CheckIn < resv.CheckOut /// which overlap in dates
                 );
 
 
@@ -68,7 +68,7 @@ namespace Hotel.Infrastructure.Repositories
             await dbContext.SaveChangesAsync(ct);
 
             resv.Id = reservation.Id;
-            return (ReservationResult.Ok, null);
+            return (ReservationResult.Ok, resv.Id);
         }
 
         public async Task<Reservation?> GetByIdAsync(int id, CancellationToken ct)
@@ -81,7 +81,7 @@ namespace Hotel.Infrastructure.Repositories
         public async Task<bool> DeleteAsync(int id, CancellationToken ct)
         {
             var entity = await dbContext.Reservations.FindAsync([id], ct);
-            if (entity is null) return false;
+            if (entity is null || entity.Status == "Inactive") return false;
 
             entity.Status = "Inactive";
             await dbContext.SaveChangesAsync(ct);
