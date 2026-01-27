@@ -15,6 +15,12 @@ public class GuestsController(
     UpdateGuestUseCase updateGuestUseCase
     ) : ControllerBase
 {
+    /// <summary>
+    /// Retrieves a list of all guests.
+    /// </summary>
+    /// <param name="request">The filtering criteria (currently unused but reserved for future use).</param>
+    /// <param name="ct">Cancellation token.</param>
+    /// <returns>A list of guests.</returns>
     [HttpGet]
     public async Task<ActionResult<List<GetGuestsResponseItem>>> GetGuests(
         [FromQuery] GetGuestsRequest request,
@@ -32,6 +38,12 @@ public class GuestsController(
         }).ToList();
     }
 
+    /// <summary>
+    /// Retrieves a specific guest by their unique identifier.
+    /// </summary>
+    /// <param name="id">The unique identifier of the guest.</param>
+    /// <param name="ct">Cancellation token.</param>
+    /// <returns>The guest details if found; otherwise, NotFound.</returns>
     [HttpGet("{id}")]
     public async Task<ActionResult<GetGuestResponse>> GetGuest(int id, CancellationToken ct)
     {
@@ -52,6 +64,12 @@ public class GuestsController(
         };
     }
 
+    /// <summary>
+    /// Creates a new guest record.
+    /// </summary>
+    /// <param name="request">The guest details to create.</param>
+    /// <param name="ct">Cancellation token.</param>
+    /// <returns>The unique identifier of the newly created guest.</returns>
     [HttpPost]
     public async Task<ActionResult<CreateGuestResponse>> CreateGuest(CreateGuestRequest request, CancellationToken ct)
     {
@@ -69,6 +87,13 @@ public class GuestsController(
         return new CreateGuestResponse { Id = id };
     }
 
+    /// <summary>
+    /// Updates an existing guest's information.
+    /// </summary>
+    /// <param name="id">The unique identifier of the guest to update.</param>
+    /// <param name="request">The updated guest details.</param>
+    /// <param name="ct">Cancellation token.</param>
+    /// <returns>NoContent if successful.</returns>
     [HttpPut("{id}")]
     public async Task<ActionResult> UpdateGuest(int id, UpdateGuestRequest request, CancellationToken ct)
     {

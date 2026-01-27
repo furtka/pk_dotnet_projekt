@@ -14,6 +14,12 @@ public class RoomsController(
     UpdateRoomUseCase updateRoomUseCase,
     DeleteRoomUseCase deleteRoomUseCase) : ControllerBase
 {
+    /// <summary>
+    /// Retrieves a list of rooms based on filtering criteria.
+    /// </summary>
+    /// <param name="request">The filtering criteria (minimum capacity, active status).</param>
+    /// <param name="ct">Cancellation token.</param>
+    /// <returns>A list of rooms matching the criteria.</returns>
     [HttpGet]
     public async Task<ActionResult<List<GetRoomsResponseItem>>> GetRooms(
         [FromQuery] GetRoomsRequest request,
@@ -33,6 +39,12 @@ public class RoomsController(
         }).ToList();
     }
 
+    /// <summary>
+    /// Retrieves a specific room by its unique identifier.
+    /// </summary>
+    /// <param name="id">The unique identifier of the room.</param>
+    /// <param name="ct">Cancellation token.</param>
+    /// <returns>The room details if found; otherwise, NotFound.</returns>
     [HttpGet("{id}")]
     public async Task<ActionResult<GetRoomResponse>> GetRoom(
         int id,
@@ -54,6 +66,12 @@ public class RoomsController(
         };
     }
 
+    /// <summary>
+    /// Creates a new room.
+    /// </summary>
+    /// <param name="request">The room details to create.</param>
+    /// <param name="ct">Cancellation token.</param>
+    /// <returns>The unique identifier of the newly created room.</returns>
     [HttpPost]
     public async Task<ActionResult<CreateRoomResponse>> CreateRoom(
         CreateRoomRequest request,
@@ -71,6 +89,13 @@ public class RoomsController(
         return new CreateRoomResponse { Id = id };
     }
 
+    /// <summary>
+    /// Updates an existing room.
+    /// </summary>
+    /// <param name="id">The unique identifier of the room to update.</param>
+    /// <param name="request">The updated room details.</param>
+    /// <param name="ct">Cancellation token.</param>
+    /// <returns>NoContent if successful.</returns>
     [HttpPut("{id}")]
     public async Task<ActionResult> UpdateRoom(
         int id,
@@ -90,6 +115,12 @@ public class RoomsController(
         return NoContent();
     }
 
+    /// <summary>
+    /// Deletes a specific room.
+    /// </summary>
+    /// <param name="id">The unique identifier of the room to delete.</param>
+    /// <param name="ct">Cancellation token.</param>
+    /// <returns>NoContent if successful.</returns>
     [HttpDelete("{id}")]
     public async Task<ActionResult> DeleteRoom(int id, CancellationToken ct)
     {
