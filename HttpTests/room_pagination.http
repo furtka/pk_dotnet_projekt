@@ -1,0 +1,50 @@
+@base_url = http://localhost:5069/api
+
+### 1. Create a Room
+POST {{base_url}}/rooms
+Content-Type: application/json
+
+{
+  "number": "301",
+  "capacity": 4,
+  "isActive": true
+}
+
+POST {{base_url}}/rooms
+Content-Type: application/json
+
+{
+  "number": "302",
+  "capacity": 4,
+  "isActive": true
+}
+
+POST {{base_url}}/rooms
+Content-Type: application/json
+
+{
+  "number": "303",
+  "capacity": 4,
+  "isActive": true
+}
+
+POST {{base_url}}/rooms
+Content-Type: application/json
+
+{
+  "number": "304",
+  "capacity": 4,
+  "isActive": true
+}
+
+
+### 2. Get Pageinated Rooms
+GET {{base_url}}/rooms
+Accept: application/json
+
+
+GET {{base_url}}/rooms?pageSize=2
+Accept: application/json
+
+GET {{base_url}}/rooms?pageSize=2&nextId=3
+Accept: application/json

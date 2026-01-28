@@ -21,24 +21,31 @@ public class RoomsController(
     /// <param name="ct">Cancellation token.</param>
     /// <returns>A list of rooms matching the criteria.</returns>
     [HttpGet]
-    public async Task<ActionResult<List<GetRoomsResponseItem>>> GetRooms(
+    public async Task<ActionResult<GetRoomsResponsePage>> GetRooms(
         [FromQuery] GetRoomsRequest request,
         CancellationToken ct)
     {
         var rooms = await getRoomsUseCase.ExecuteAsync(
+            request.PageSize,
+            request.NextId,
             request.MinCapacity,
             request.OnlyActive,
             ct);
 
-        return rooms.Select(r => new GetRoomsResponseItem
+        return new GetRoomsResponsePage
         {
-            Id = r.Id,
-            Number = r.Number,
-            Capacity = r.Capacity,
-            IsActive = r.IsActive,
-            PricePerNight = r.PricePerNight,
-            Type = r.Type
-        }).ToList();
+            Rooms = [.. rooms.Rooms.Select(r => new GetRoomsResponseItem
+            {
+                Id = r.Id,
+                Number = r.Number,
+                Capacity = r.Capacity,
+                IsActive = r.IsActive,
+                PricePerNight = r.PricePerNight,
+                Type = r.Type
+            })],
+            HasNext = rooms.HasNext,
+            NextId = rooms.NextId
+        };
     }
 
     /// <summary>
