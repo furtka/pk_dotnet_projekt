@@ -6,11 +6,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Hotel.Application.UseCases.Guest
+namespace Hotel.Application.UseCases.Reservations
 {
     public class RemoveReservationUseCase(IReservationRepository reservationRepository)
     {
-        public Task<bool> ExecuteAsync(int id, CancellationToken ct)
+        public Task<IReservationRepository.ReservationCancellationResult> ExecuteAsync(int id, CancellationToken ct)
         {
             return reservationRepository.DeleteAsync(id, ct);
         }

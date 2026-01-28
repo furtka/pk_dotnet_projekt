@@ -1,7 +1,7 @@
 using Hotel.Api.Guests.Dtos;
 using Hotel.Api.Reservations.Dtos;
 using Hotel.Application.Domain.Models;
-using Hotel.Application.UseCases.Guest;
+using Hotel.Application.UseCases.Reservations;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using static Hotel.Application.Domain.Repositories.IReservationRepository;
@@ -53,16 +53,23 @@ public class ReservationsController(
         if (request.CheckIn >= request.CheckOut)
         {
             return BadRequest("Invalid dates - CheckOut has to be later than CheckIn");
+        } else if (request.CheckOut.DayNumber - request.CheckIn.DayNumber > 30)
+        {
+            return BadRequest("Invalid dates - Reservation longer than 30 nights");
+        }
+        else if (request.CheckIn <= DateOnly.FromDateTime(DateTime.Now))
+        {
+            return BadRequest("Invalid check in date - date needs to be in the future");
         }
 
         var reservation = new Reservation()
-        {
-            RoomId = request.RoomId,
-            GuestId = request.GuestId,
-            CheckIn = request.CheckIn,
-            CheckOut = request.CheckOut,
-            GuestsCount = request.GuestsCount
-        };
+            {
+                RoomId = request.RoomId,
+                GuestId = request.GuestId,
+                CheckIn = request.CheckIn,
+                CheckOut = request.CheckOut,
+                GuestsCount = request.GuestsCount
+            };
         var (result, id) = await createReservationUseCase.ExecuteAsync(reservation, ct);
 
         switch (result)
@@ -100,12 +107,17 @@ public class ReservationsController(
     {
         var result = await removeReservationUseCase.ExecuteAsync(id, ct);
 
-        if(result)
+        switch (result)
         {
-            return NoContent();
-        } else
-        {
-            return NotFound();
+            default:
+            case ReservationCancellationResult.Ok:
+                return NoContent();
+
+            case ReservationCancellationResult.TooLateToCancel:
+                return BadRequest("Reservation was not cancelled as it is too late to cancel it.");
+
+            case ReservationCancellationResult.AlreadyInactive:
+                return NotFound();
         }
     }
 }

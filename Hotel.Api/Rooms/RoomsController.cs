@@ -2,6 +2,7 @@ using Hotel.Api.Rooms.Dtos;
 using Hotel.Application.Domain.Models;
 using Hotel.Application.UseCases.Rooms;
 using Microsoft.AspNetCore.Mvc;
+using static Hotel.Application.Domain.Repositories.IRoomRepository;
 
 namespace Hotel.Api.Rooms;
 
@@ -118,9 +119,18 @@ public class RoomsController(
             Type = request.Type
         };
 
-        await updateRoomUseCase.ExecuteAsync(room, ct);
+        var result = await updateRoomUseCase.ExecuteAsync(room, ct);
 
-        return NoContent();
+        switch (result)
+        {
+            case RoomUpdateResult.NotFound:
+                return NotFound();
+            case RoomUpdateResult.NumberConflict:
+                return Conflict("Room number already exists.");
+            default:
+            case RoomUpdateResult.Ok:
+                return NoContent();
+        }
     }
 
     /// <summary>

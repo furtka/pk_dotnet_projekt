@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using static Hotel.Application.Domain.Repositories.IReservationRepository;
 
-namespace Hotel.Application.UseCases.Guest
+namespace Hotel.Application.UseCases.Reservations
 {
     public class CreateReservationUseCase(IReservationRepository reservationRepository)
     {

@@ -19,6 +19,12 @@ namespace Hotel.Application.Domain.Repositories
         Task<Reservation?> GetByIdAsync(int id, CancellationToken ct);
         Task<(ReservationResult, int?)> AddAsync(Reservation resv, CancellationToken ct);
 
-        Task<bool> DeleteAsync(int id, CancellationToken ct);
+        public enum ReservationCancellationResult
+        {
+            AlreadyInactive,
+            TooLateToCancel,
+            Ok
+        };
+        Task<ReservationCancellationResult> DeleteAsync(int id, CancellationToken ct);
     }
 }

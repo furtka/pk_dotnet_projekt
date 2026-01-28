@@ -78,15 +78,18 @@ namespace Hotel.Infrastructure.Repositories
 
             return MapToDomain(reservation);
         }
-        public async Task<bool> DeleteAsync(int id, CancellationToken ct)
+        public async Task<ReservationCancellationResult> DeleteAsync(int id, CancellationToken ct)
         {
             var entity = await dbContext.Reservations.FindAsync([id], ct);
-            if (entity is null || entity.Status == "Inactive") return false;
+            if (entity is null || entity.Status == "Inactive") return ReservationCancellationResult.AlreadyInactive;
+
+            if (DateOnly.FromDateTime(DateTime.Now) >= entity.CheckIn)
+                return ReservationCancellationResult.TooLateToCancel;
 
             entity.Status = "Inactive";
             await dbContext.SaveChangesAsync(ct);
 
-            return true;
+            return ReservationCancellationResult.Ok;
         }
 
         private static Reservation MapToDomain(EntityReservation entity)
@@ -101,7 +104,6 @@ namespace Hotel.Infrastructure.Repositories
                 GuestsCount = entity.GuestsCount,
                 TotalPrice = entity.TotalPrice,
                 Status = entity.Status,
-                //RowVersion = entity.RowVersion
             };
         }
     }
