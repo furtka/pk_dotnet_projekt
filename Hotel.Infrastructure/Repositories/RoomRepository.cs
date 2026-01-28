@@ -114,4 +114,9 @@ public class RoomRepository(HotelDbContext dbContext) : IRoomRepository
             Type = entity.Type
         };
     }
+
+    public Task<bool> ExistsByNumberAsync(string number, CancellationToken ct)
+    {
+        return dbContext.Rooms.AnyAsync(r => r.Number == number, ct);
+    }
 }

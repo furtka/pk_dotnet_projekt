@@ -102,9 +102,14 @@ public class RoomsController(
             Type = request.Type
         };
 
-        var id = await createRoomUseCase.ExecuteAsync(room, ct);
+        var result = await createRoomUseCase.ExecuteAsync(room, ct);
 
-        return new CreateRoomResponse { Id = id };
+        if (result.IsConflict)
+        {
+            return Conflict("Room number already exists.");
+        }
+
+        return new CreateRoomResponse { Id = result.Id!.Value };
     }
 
     /// <summary>
