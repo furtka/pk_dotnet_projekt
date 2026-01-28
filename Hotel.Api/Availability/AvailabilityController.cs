@@ -36,12 +36,12 @@ public class AvailabilityController(
             return BadRequest("Invalid check in date - date needs to be in the future");
         }
 
-            var filter = new AvailabilityFilter()
-            {
-                CheckIn = request.CheckIn,
-                CheckOut = request.CheckOut,
-                MinCapacity = request.MinCapacity
-            };
+        var filter = new AvailabilityFilter()
+        {
+            CheckIn = request.CheckIn,
+            CheckOut = request.CheckOut,
+            MinCapacity = request.MinCapacity
+        };
 
         var roomsAvailable = await getAvailableRoomsUseCase.ExecuteAsync(filter, ct);
 

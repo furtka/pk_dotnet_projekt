@@ -1,0 +1,56 @@
+@base_url = http://localhost:5069/api
+
+### 1. Create Room - Invalid Price (Negative)
+POST {{base_url}}/rooms
+Content-Type: application/json
+
+{
+  "number": "401",
+  "capacity": 2,
+  "pricePerNight": -100,
+  "type": "Standard"
+}
+
+### 2. Create Room - Invalid Price (Zero)
+POST {{base_url}}/rooms
+Content-Type: application/json
+
+{
+  "number": "402",
+  "capacity": 2,
+  "pricePerNight": 0,
+  "type": "Standard"
+}
+
+### 3. Create Room - Invalid Capacity (Negative)
+POST {{base_url}}/rooms
+Content-Type: application/json
+
+{
+  "number": "403",
+  "capacity": -1,
+  "pricePerNight": 100,
+  "type": "Standard"
+}
+
+### 4. Create Room - Invalid Number (Empty)
+POST {{base_url}}/rooms
+Content-Type: application/json
+
+{
+  "number": "",
+  "capacity": 2,
+  "pricePerNight": 100,
+  "type": "Standard"
+}
+
+### 5. Create Room - Valid
+POST {{base_url}}/rooms
+Content-Type: application/json
+
+{
+  "number": "405",
+  "capacity": 2,
+  "pricePerNight": 150,
+  "type": "Standard"
+}

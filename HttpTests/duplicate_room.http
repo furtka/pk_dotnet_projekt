@@ -1,0 +1,39 @@
+@base_url = http://localhost:5069/api
+
+### 1. Create Room (Initial)
+POST {{base_url}}/rooms
+Content-Type: application/json
+
+{
+  "number": "999",
+  "capacity": 2,
+  "pricePerNight": 100,
+  "type": "Standard"
+}
+
+### 2. Create Room (Duplicate) - Should Fail
+POST {{base_url}}/rooms
+Content-Type: application/json
+
+{
+  "number": "999",
+  "capacity": 2,
+  "pricePerNight": 100,
+  "type": "Standard"
+}
+
+### 3. Update Room (Duplicate) - Should Fail
+# First create another room to update
+POST {{base_url}}/rooms
+Content-Type: application/json
+
+{
+  "number": "998",
+  "capacity": 2,
+  "pricePerNight": 100,
+  "type": "Standard"
+}
+
+# Then try to update it to "999" (which exists)
+# Replace {id} with the ID of room 998 (likely 2 if DB was empty, but we can't know for sure without running)
+# For reproduction, we assume the user will run this and see the result.

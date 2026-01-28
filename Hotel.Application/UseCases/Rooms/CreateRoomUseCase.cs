@@ -5,8 +5,14 @@ namespace Hotel.Application.UseCases.Rooms;
 
 public class CreateRoomUseCase(IRoomRepository roomRepository)
 {
-    public Task<int> ExecuteAsync(Room room, CancellationToken ct)
+    public async Task<CreateRoomResult> ExecuteAsync(Room room, CancellationToken ct)
     {
-        return roomRepository.AddAsync(room, ct);
+        if (await roomRepository.ExistsByNumberAsync(room.Number, ct))
+        {
+            return CreateRoomResult.Conflict();
+        }
+
+        var id = await roomRepository.AddAsync(room, ct);
+        return CreateRoomResult.Success(id);
     }
 }

@@ -7,7 +7,8 @@ Content-Type: application/json
 {
   "number": "301",
   "capacity": 4,
-  "isActive": true
+  "isActive": true,
+  "pricePerNight": 150.00
 }
 
 ### 2. Get Room Details

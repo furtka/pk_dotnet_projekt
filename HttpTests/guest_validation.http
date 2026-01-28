@@ -1,0 +1,67 @@
+@base_url = http://localhost:5069/api
+
+### 1. Create Guest - Empty First Name
+POST {{base_url}}/guests
+Content-Type: application/json
+
+{
+  "firstName": "",
+  "lastName": "Doe",
+  "email": "john.doe@example.com",
+  "phone": "+1234567890"
+}
+
+### 2. Create Guest - Empty Last Name
+POST {{base_url}}/guests
+Content-Type: application/json
+
+{
+  "firstName": "John",
+  "lastName": "",
+  "email": "john.doe@example.com",
+  "phone": "+1234567890"
+}
+
+### 3. Create Guest - Invalid Email (Format)
+POST {{base_url}}/guests
+Content-Type: application/json
+
+{
+  "firstName": "John",
+  "lastName": "Doe",
+  "email": "invalid-email",
+  "phone": "+1234567890"
+}
+
+### 4. Create Guest - Empty Email
+POST {{base_url}}/guests
+Content-Type: application/json
+
+{
+  "firstName": "John",
+  "lastName": "Doe",
+  "email": "",
+  "phone": "+1234567890"
+}
+
+### 5. Create Guest - Invalid Phone (Format)
+POST {{base_url}}/guests
+Content-Type: application/json
+
+{
+  "firstName": "John",
+  "lastName": "Doe",
+  "email": "john.doe@example.com",
+  "phone": "invalid-phone"
+}
+
+### 6. Create Guest - Valid
+POST {{base_url}}/guests
+Content-Type: application/json
+
+{
+  "firstName": "John",
+  "lastName": "Doe",
+  "email": "john.doe@example.com",
+  "phone": "+48 123 456 789"
+}
