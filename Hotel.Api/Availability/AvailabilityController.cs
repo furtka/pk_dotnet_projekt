@@ -24,18 +24,6 @@ public class AvailabilityController(
     {
         logger.LogInformation("Getting availability for dates: {CheckIn} - {CheckOut}", request.CheckIn, request.CheckOut);
 
-        if (request.CheckIn >= request.CheckOut)
-        {
-            return BadRequest("Invalid dates - CheckOut has to be later than CheckIn");
-        }
-        else if (request.CheckOut.DayNumber - request.CheckIn.DayNumber > 30)
-        {
-            return BadRequest("Invalid dates - Reservation longer than 30 nights");
-        } else if (request.CheckIn <= DateOnly.FromDateTime(DateTime.Now))
-        {
-            return BadRequest("Invalid check in date - date needs to be in the future");
-        }
-
         var filter = new AvailabilityFilter()
         {
             CheckIn = request.CheckIn,
