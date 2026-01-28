@@ -1,0 +1,16 @@
+@base_url = http://localhost:5069/api
+
+### 1. Get Availability - CheckOut before CheckIn
+GET {{base_url}}/availability?checkIn=2026-02-10&checkOut=2026-02-09
+
+### 2. Get Availability - Duration > 30 days
+GET {{base_url}}/availability?checkIn=2026-02-01&checkOut=2026-03-05
+
+### 3. Get Availability - CheckIn in the past
+GET {{base_url}}/availability?checkIn=2020-01-01&checkOut=2020-01-05
+
+### 4. Get Availability - Negative MinCapacity
+GET {{base_url}}/availability?checkIn=2026-06-01&checkOut=2026-06-05&minCapacity=-1
+
+### 5. Get Availability - Valid
+GET {{base_url}}/availability?checkIn=2026-06-01&checkOut=2026-06-05&minCapacity=2

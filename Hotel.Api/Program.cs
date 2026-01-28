@@ -6,6 +6,9 @@ using Hotel.Application.UseCases.Guest;
 using Hotel.Application.UseCases.Reservations;
 using Hotel.Infrastructure.Repositories;
 using Hotel.Application.UseCases.Rooms;
+using FluentValidation.AspNetCore;
+using FluentValidation;
+using Hotel.Api.Availability.Validators;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -21,6 +24,9 @@ builder.Services.AddSwaggerGen(options =>
     options.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFilename));
 });
 builder.Services.AddControllers();
+
+builder.Services.AddFluentValidationAutoValidation();
+builder.Services.AddValidatorsFromAssemblyContaining<GetAvailabilityRequestValidator>();
 
 builder.Services.AddScoped<IRoomRepository, RoomRepository>();
 builder.Services.AddScoped<GetRoomsUseCase>();

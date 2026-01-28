@@ -1,0 +1,49 @@
+@base_url = http://localhost:5069/api
+
+### 1. Create Reservation - CheckOut before CheckIn
+POST {{base_url}}/reservations
+Content-Type: application/json
+
+{
+  "roomId": 1,
+  "guestId": 1,
+  "checkIn": "2026-02-10",
+  "checkOut": "2026-02-09",
+  "numberOfGuests": 2
+}
+
+### 2. Create Reservation - Duration > 30 days
+POST {{base_url}}/reservations
+Content-Type: application/json
+
+{
+  "roomId": 1,
+  "guestId": 1,
+  "checkIn": "2026-02-01",
+  "checkOut": "2026-03-05",
+  "numberOfGuests": 2
+}
+
+### 3. Create Reservation - CheckIn in the past
+POST {{base_url}}/reservations
+Content-Type: application/json
+
+{
+  "roomId": 1,
+  "guestId": 1,
+  "checkIn": "2020-01-01",
+  "checkOut": "2020-01-05",
+  "numberOfGuests": 2
+}
+
+### 4. Create Reservation - Valid
+POST {{base_url}}/reservations
+Content-Type: application/json
+
+{
+  "roomId": 1,
+  "guestId": 1,
+  "checkIn": "2026-06-01",
+  "checkOut": "2026-06-05",
+  "numberOfGuests": 2
+}
