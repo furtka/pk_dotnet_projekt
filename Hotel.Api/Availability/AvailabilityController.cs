@@ -8,7 +8,8 @@ namespace Hotel.Api.Availability;
 [ApiController]
 [Route("api/availability")]
 public class AvailabilityController(
-    GetAvailableRoomsUseCase getAvailableRoomsUseCase) : ControllerBase
+    GetAvailableRoomsUseCase getAvailableRoomsUseCase,
+    ILogger<AvailabilityController> logger) : ControllerBase
 {
     /// <summary>
     /// Retrieves room availability for a given date range.
@@ -21,6 +22,8 @@ public class AvailabilityController(
         [FromQuery] GetAvailabilityRequest request,
         CancellationToken ct)
     {
+        logger.LogInformation("Getting availability for dates: {CheckIn} - {CheckOut}", request.CheckIn, request.CheckOut);
+
         if (request.CheckIn >= request.CheckOut)
         {
             return BadRequest("Invalid dates - CheckOut has to be later than CheckIn");
