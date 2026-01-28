@@ -5,4 +5,6 @@ public sealed class CreateRoomRequest
     public string Number { get; set; } = default!;
     public int Capacity { get; set; }
     public bool IsActive { get; set; } = true;
+    public string Type { get; set; } = "Standard";
+    public decimal PricePerNight { get; set; }
 }

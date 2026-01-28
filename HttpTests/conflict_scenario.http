@@ -1,0 +1,47 @@
+@base_url = http://localhost:5069/api
+
+### 1. Create Room & Guest (Setup)
+POST {{base_url}}/rooms
+Content-Type: application/json
+
+{
+  "number": "401",
+  "capacity": 2,
+  "isActive": true
+}
+
+###
+POST {{base_url}}/guests
+Content-Type: application/json
+
+{
+  "firstName": "Charlie",
+  "lastName": "Brown",
+  "email": "charlie.brown@example.com"
+}
+
+### 2. Create First Reservation
+# Replace roomId and guestId with actual IDs
+POST {{base_url}}/reservations
+Content-Type: application/json
+
+{
+  "roomId": 1,
+  "guestId": 1,
+  "checkIn": "2026-07-01",
+  "checkOut": "2026-07-10",
+  "guestsCount": 2
+}
+
+### 3. Attempt Overlapping Reservation (Expect 409 Conflict)
+# Same room, overlapping dates
+POST {{base_url}}/reservations
+Content-Type: application/json
+
+{
+  "roomId": 1,
+  "guestId": 1,
+  "checkIn": "2026-07-05",
+  "checkOut": "2026-07-15",
+  "guestsCount": 2
+}

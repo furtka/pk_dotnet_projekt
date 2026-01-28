@@ -1,0 +1,46 @@
+@base_url = http://localhost:5069/api
+
+### 1. Create a Room
+POST {{base_url}}/rooms
+Content-Type: application/json
+
+{
+  "number": "201",
+  "capacity": 2,
+  "isActive": true
+}
+
+### 2. Create a Guest
+POST {{base_url}}/guests
+Content-Type: application/json
+
+{
+  "firstName": "Alice",
+  "lastName": "Smith",
+  "email": "alice.smith@example.com",
+  "phone": "+48111222333"
+}
+
+### 3. Check Availability
+# Use the roomId from step 1 and guestId from step 2 if known, 
+# or just check general availability for the dates.
+GET {{base_url}}/availability?checkIn=2026-06-01&checkOut=2026-06-05&minCapacity=2
+Accept: application/json
+
+### 4. Create a Reservation
+# Replace roomId and guestId with actual IDs from previous steps
+POST {{base_url}}/reservations
+Content-Type: application/json
+
+{
+  "roomId": 2,
+  "guestId": 2,
+  "checkIn": "2026-06-01",
+  "checkOut": "2026-06-05",
+  "guestsCount": 2
+}
+
+### 5. Get Reservation Details
+# Replace {id} with the ID returned from step 4
+GET {{base_url}}/reservations/1
+Accept: application/json

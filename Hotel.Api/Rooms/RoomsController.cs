@@ -35,7 +35,9 @@ public class RoomsController(
             Id = r.Id,
             Number = r.Number,
             Capacity = r.Capacity,
-            IsActive = r.IsActive
+            IsActive = r.IsActive,
+            PricePerNight = r.PricePerNight,
+            Type = r.Type
         }).ToList();
     }
 
@@ -62,7 +64,9 @@ public class RoomsController(
             Id = room.Id,
             Number = room.Number,
             Capacity = room.Capacity,
-            IsActive = room.IsActive
+            IsActive = room.IsActive,
+            PricePerNight = room.PricePerNight,
+            Type = room.Type
         };
     }
 
@@ -81,7 +85,9 @@ public class RoomsController(
         {
             Number = request.Number,
             Capacity = request.Capacity,
-            IsActive = request.IsActive
+            IsActive = request.IsActive,
+            PricePerNight = request.PricePerNight,
+            Type = request.Type
         };
 
         var id = await createRoomUseCase.ExecuteAsync(room, ct);
@@ -107,7 +113,9 @@ public class RoomsController(
             Id = id,
             Number = request.Number,
             Capacity = request.Capacity,
-            IsActive = request.IsActive
+            IsActive = request.IsActive,
+            PricePerNight = request.PricePerNight,
+            Type = request.Type
         };
 
         await updateRoomUseCase.ExecuteAsync(room, ct);

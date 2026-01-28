@@ -1,11 +1,14 @@
 using Hotel.Api.Availability.Dtos;
+using Hotel.Application.Domain.Models;
+using Hotel.Application.UseCases.Guest;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Hotel.Api.Availability;
 
 [ApiController]
 [Route("api/availability")]
-public class AvailabilityController : ControllerBase
+public class AvailabilityController(
+    GetAvailableRoomsUseCase getAvailableRoomsUseCase) : ControllerBase
 {
     /// <summary>
     /// Retrieves room availability for a given date range.
@@ -18,6 +21,26 @@ public class AvailabilityController : ControllerBase
         [FromQuery] GetAvailabilityRequest request,
         CancellationToken ct)
     {
-        throw new NotImplementedException();
+        if (request.CheckIn >= request.CheckOut)
+        {
+            return BadRequest("Invalid dates - CheckOut has to be later than CheckIn");
+        }
+
+        var filter = new AvailabilityFilter()
+        {
+            CheckIn = request.CheckIn,
+            CheckOut = request.CheckOut,
+            MinCapacity = request.MinCapacity
+        };
+
+        var roomsAvailable = await getAvailableRoomsUseCase.ExecuteAsync(filter, ct);
+
+        return Ok(roomsAvailable.Select(r => new GetAvailabilityResponse()
+        {
+            RoomId = r.Id,
+            RoomNumber = r.Number,
+            Capacity = r.Capacity,
+            Price = r.PricePerNight * (filter.CheckOut.DayNumber - filter.CheckIn.DayNumber)
+        }));
     }
 }

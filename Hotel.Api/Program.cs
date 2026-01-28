@@ -33,6 +33,14 @@ builder.Services.AddScoped<CreateGuestUseCase>();
 builder.Services.AddScoped<GetGuestByIdUseCase>();
 builder.Services.AddScoped<UpdateGuestUseCase>();
 
+builder.Services.AddScoped<IReservationRepository, ReservationRepository>();
+builder.Services.AddScoped<GetReservationByIdUseCase>();
+builder.Services.AddScoped<CreateReservationUseCase>();
+builder.Services.AddScoped<RemoveReservationUseCase>();
+
+builder.Services.AddScoped<IAvailabilityRepository, AvailabilityRepository>();
+builder.Services.AddScoped<GetAvailableRoomsUseCase>();
+
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
