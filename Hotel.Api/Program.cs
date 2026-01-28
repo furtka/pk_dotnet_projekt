@@ -1,7 +1,9 @@
 using Hotel.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Hotel.Application.Domain.Repositories;
+using Hotel.Application.UseCases.Availability;
 using Hotel.Application.UseCases.Guest;
+using Hotel.Application.UseCases.Reservations;
 using Hotel.Infrastructure.Repositories;
 using Hotel.Application.UseCases.Rooms;
 

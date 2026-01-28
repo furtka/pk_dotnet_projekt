@@ -1,6 +1,6 @@
 using Hotel.Api.Availability.Dtos;
 using Hotel.Application.Domain.Models;
-using Hotel.Application.UseCases.Guest;
+using Hotel.Application.UseCases.Availability;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Hotel.Api.Availability;
@@ -28,13 +28,20 @@ public class AvailabilityController(
         {
             return BadRequest("Invalid dates - CheckOut has to be later than CheckIn");
         }
-
-        var filter = new AvailabilityFilter()
+        else if (request.CheckOut.DayNumber - request.CheckIn.DayNumber > 30)
         {
-            CheckIn = request.CheckIn,
-            CheckOut = request.CheckOut,
-            MinCapacity = request.MinCapacity
-        };
+            return BadRequest("Invalid dates - Reservation longer than 30 nights");
+        } else if (request.CheckIn <= DateOnly.FromDateTime(DateTime.Now))
+        {
+            return BadRequest("Invalid check in date - date needs to be in the future");
+        }
+
+            var filter = new AvailabilityFilter()
+            {
+                CheckIn = request.CheckIn,
+                CheckOut = request.CheckOut,
+                MinCapacity = request.MinCapacity
+            };
 
         var roomsAvailable = await getAvailableRoomsUseCase.ExecuteAsync(filter, ct);
 

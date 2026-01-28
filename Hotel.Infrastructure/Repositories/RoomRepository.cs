@@ -1,6 +1,7 @@
 using Hotel.Application.Domain.Models;
 using Hotel.Application.Domain.Repositories;
 using Microsoft.EntityFrameworkCore;
+using static Hotel.Application.Domain.Repositories.IRoomRepository;
 using EntityRoom = Hotel.Infrastructure.Entities.Room;
 
 namespace Hotel.Infrastructure.Repositories;
@@ -68,10 +69,18 @@ public class RoomRepository(HotelDbContext dbContext) : IRoomRepository
         return entity.Id;
     }
 
-    public async Task UpdateAsync(Room room, CancellationToken ct)
+    public async Task<RoomUpdateResult> UpdateAsync(Room room, CancellationToken ct)
     {
+        var checkDuplicateNumber = await dbContext.Rooms.AnyAsync(r => r.Id != room.Id && r.Number == room.Number, ct);
+
+        if (checkDuplicateNumber)
+        {
+            return RoomUpdateResult.NumberConflict;
+        }
+
         var entity = await dbContext.Rooms.FindAsync([room.Id], ct);
-        if (entity is null) return;
+        if (entity is null) return RoomUpdateResult.NotFound;
+
 
         entity.Number = room.Number;
         entity.Capacity = room.Capacity;
@@ -80,6 +89,8 @@ public class RoomRepository(HotelDbContext dbContext) : IRoomRepository
         entity.Type = room.Type;
 
         await dbContext.SaveChangesAsync(ct);
+
+        return RoomUpdateResult.Ok;
     }
 
     public async Task DeleteAsync(Room room, CancellationToken ct)

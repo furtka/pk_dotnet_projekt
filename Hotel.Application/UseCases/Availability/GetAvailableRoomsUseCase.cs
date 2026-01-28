@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Hotel.Application.UseCases.Guest
+namespace Hotel.Application.UseCases.Availability
 {
     public class GetAvailableRoomsUseCase(IAvailabilityRepository availabilityRepository)
     {
