@@ -23,7 +23,7 @@ public sealed class CreateGuestRequestValidator
 
         RuleFor(x => x.Phone)
             .MaximumLength(20)
-            .Matches(@"^\+?[0-9\s\-()]*$")
+            .Matches(@"^(?:\+48\s?)?(?:\d{3}[\s-]?){2}\d{3}$")
             .When(x => !string.IsNullOrWhiteSpace(x.Phone))
             .WithMessage("Phone number format is invalid");
     }

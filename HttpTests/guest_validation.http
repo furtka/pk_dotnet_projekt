@@ -63,5 +63,5 @@ Content-Type: application/json
   "firstName": "John",
   "lastName": "Doe",
   "email": "john.doe@example.com",
-  "phone": "+1234567890"
+  "phone": "+48 123 456 789"
 }
